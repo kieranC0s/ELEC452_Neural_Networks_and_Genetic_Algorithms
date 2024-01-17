@@ -36,12 +36,14 @@ tokenizer_keras.fit_on_texts(phish_data['text_sent'])
 # Define the max_sequence_length based on your analysis of the data
 max_sequence_length = 300
 
+# Function to preprocess URLs
 def preprocess_urls(url_list, tokenizer_keras, max_sequence_length, tokenizer_regexp, stemmer):
     preprocessed_urls = [tokenize_and_stem(url, tokenizer_regexp, stemmer) for url in url_list]
     sequences = tokenizer_keras.texts_to_sequences(preprocessed_urls)
     padded_sequences = pad_sequences(sequences, maxlen=max_sequence_length)
     return padded_sequences
 
+# Function to predict labels for new URLs
 def predict_urls(url_list, model, tokenizer_keras, max_sequence_length, tokenizer_regexp, stemmer):
     padded_sequences = preprocess_urls(url_list, tokenizer_keras, max_sequence_length, tokenizer_regexp, stemmer)
     predictions = model.predict(padded_sequences, verbose=1)
@@ -62,7 +64,6 @@ url_list = [
     'macdonrod.blogspot.com/',
     'macdougal.com/'
 ]
-
 
 # Load the trained model
 model = tf.keras.models.load_model('phishing_detection_model.h5')
